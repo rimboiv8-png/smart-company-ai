@@ -11,274 +11,195 @@
       --bg-elevated: #191c24;
       --silver: #d8dde6;
       --silver-muted: #9aa3b2;
-      --border-silver: rgba(216, 221, 230, 0.22);
-      --accent-glow: rgba(216, 221, 230, 0.12);
+      --border: rgba(216, 221, 230, 0.18);
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     body {
-      background: radial-gradient(circle at top, #171a22 0%, var(--bg-main) 65%);
+      background: linear-gradient(180deg, #07080a 0%, #11141c 100%);
       color: var(--silver);
       min-height: 100vh;
-      padding: 16px;
-      padding-bottom: 40px;
+      padding: 20px;
     }
-
-    .app-container {
-      max-width: 540px;
+    .container {
+      max-width: 720px;
       margin: 0 auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
     }
-
-    .header {
-      background: linear-gradient(145deg, #161922, #0d0f14);
-      border: 1px solid var(--border-silver);
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
-    }
-
-    .brand-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-
-    .brand-title {
-      font-size: 1.25rem;
-      font-weight: 800;
+    h1 {
+      font-size: 1.4rem;
       letter-spacing: 0.5px;
+      margin-bottom: 6px;
       color: #ffffff;
     }
-
-    .badge {
-      font-size: 0.72rem;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border-silver);
-      background: var(--accent-glow);
-      color: var(--silver);
+    .sub {
+      color: var(--silver-muted);
+      font-size: 0.9rem;
+      margin-bottom: 18px;
     }
-
-    .subtitle {
+    .box {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
       font-size: 0.85rem;
       color: var(--silver-muted);
-      line-height: 1.5;
-    }
-
-    .section-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border-silver);
-      border-radius: 16px;
-      padding: 14px;
-      margin-bottom: 14px;
-    }
-
-    .section-label {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--silver);
-      margin-bottom: 10px;
-      display: block;
-    }
-
-    .departments-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .dept-chip {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-silver);
-      color: var(--silver);
-      padding: 7px 12px;
-      border-radius: 12px;
-      font-size: 0.78rem;
-      font-weight: 600;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 95px;
-      background: #0c0e13;
-      border: 1px solid var(--border-silver);
-      border-radius: 12px;
-      padding: 12px;
-      color: #ffffff;
-      font-size: 0.92rem;
-      line-height: 1.5;
-      resize: vertical;
-      outline: none;
-    }
-
-    textarea:focus {
-      border-color: #ffffff;
-      box-shadow: 0 0 0 2px rgba(216, 221, 230, 0.15);
-    }
-
-    .btn-primary {
-      width: 100%;
-      margin-top: 10px;
-      padding: 13px;
-      border-radius: 12px;
-      border: 1px solid #ffffff;
-      background: linear-gradient(135deg, #e5e9f0, #aeb7c6);
-      color: #090a0d;
-      font-size: 0.95rem;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .btn-primary:active {
-      transform: scale(0.99);
-    }
-
-    .report-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-silver);
-      border-radius: 16px;
-      padding: 15px;
-      margin-bottom: 12px;
-    }
-
-    .report-title {
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: #ffffff;
       margin-bottom: 8px;
     }
-
-    .report-text {
-      font-size: 0.86rem;
-      color: var(--silver);
-      line-height: 1.65;
-      white-space: pre-line;
-    }
-
-    .approval-box {
-      background: #171510;
-      border: 1px solid rgba(255, 215, 130, 0.45);
-      border-radius: 14px;
-      padding: 13px;
-      margin-top: 12px;
-    }
-
-    .approval-title {
-      font-size: 0.86rem;
-      font-weight: 800;
-      color: #ffe29a;
-      margin-bottom: 6px;
-    }
-
-    .approval-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .btn-approve, .btn-reject {
-      flex: 1;
-      padding: 10px;
+    input, textarea {
+      width: 100%;
+      background: var(--bg-main);
+      color: #ffffff;
+      border: 1px solid var(--border);
       border-radius: 10px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
-      border: 1px solid var(--border-silver);
+      padding: 11px;
+      font-size: 0.95rem;
     }
-
-    .btn-approve {
-      background: #d8dde6;
+    textarea { min-height: 110px; resize: vertical; }
+    .row { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+    button {
+      background: linear-gradient(135deg, #e5e9f0, #9aa3b2);
       color: #090a0d;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
     }
-
-    .btn-reject {
-      background: #1c1f28;
+    button.secondary {
+      background: transparent;
       color: var(--silver);
+      border: 1px solid var(--border);
     }
-
-    .status-note {
-      margin-top: 8px;
+    .status {
       font-size: 0.82rem;
-      color: #b8c2d1;
-      font-weight: 600;
+      color: var(--silver-muted);
+      margin-top: 8px;
+    }
+    .output {
+      white-space: pre-wrap;
+      line-height: 1.65;
+      color: #f0f3f8;
+      min-height: 90px;
     }
   </style>
 </head>
 <body>
-  <div class="app-container">
-    <header class="header">
-      <div class="brand-row">
-        <div class="brand-title">SMART COMPANY AI</div>
-        <div class="badge">المدير العام: أنت</div>
+  <div class="container">
+    <h1>SMART COMPANY AI</h1>
+    <p class="sub">منصة إدارة وتحليل ذكية — المفتاح محفوظ محلياً على جهازك فقط</p>
+
+    <div class="box">
+      <label for="apiKeyInput">مفتاح Gemini API (يُحفظ في localStorage فقط)</label>
+      <input id="apiKeyInput" type="password" placeholder="الصق مفتاح Gemini هنا..." autocomplete="off" />
+      <div class="row">
+        <button id="saveKeyBtn" type="button">حفظ المفتاح على الجهاز</button>
+        <button id="clearKeyBtn" class="secondary" type="button">مسح المفتاح</button>
       </div>
-      <p class="subtitle">
-        مركز قيادة التجارة الإلكترونية الذكي — الأقسام تتعاون وتقترح، وأنت صاحب القرار النهائي.
-      </p>
-    </header>
+      <div id="keyStatus" class="status"></div>
+    </div>
 
-    <section class="section-box">
-      <span class="section-label">الأقسام الذكية النشطة</span>
-      <div class="departments-grid">
-        <span class="dept-chip">المدير الذكي</span>
-        <span class="dept-chip">دراسة السوق</span>
-        <span class="dept-chip">التسويق</span>
-        <span class="dept-chip">المبيعات</span>
-        <span class="dept-chip">العمليات</span>
-        <span class="dept-chip">المالية والمحاسبة</span>
-        <span class="dept-chip">التكنولوجيا والأتمتة</span>
+    <div class="box">
+      <label for="promptInput">اطلب تحليلاً أو مهمة أعمال</label>
+      <textarea id="promptInput" placeholder="مثال: اقترح خطة عمل سريعة لزيادة المبيعات هذا الشهر..."></textarea>
+      <div class="row">
+        <button id="runBtn" type="button">تحليل فوري</button>
       </div>
-    </section>
+    </div>
 
-    <section class="section-box">
-      <label for="commandInput" class="section-label">أمر للمدير الذكي</label>
-      <textarea id="commandInput" placeholder="مثال: ابحث لي عن منتج مربح بميزانية 10,000 دج"></textarea>
-      <button class="btn-primary" onclick="runSmartCompany()">إرسال الأمر وتنسيق الأقسام</button>
-    </section>
-
-    <div id="outputArea"></div>
+    <div class="box">
+      <label>النتيجة</label>
+      <div id="outputBox" class="output">بانتظار إدخال المفتاح وطرح سؤالك...</div>
+    </div>
   </div>
 
   <script>
-    function runSmartCompany() {
-      const cmd = document.getElementById("commandInput").value.trim() || "ابحث لي عن منتج مربح بميزانية 10,000 دج";
-      const output = document.getElementById("outputArea");
+    const STORAGE_KEY = "smart_company_gemini_api_key";
+    const apiKeyInput = document.getElementById("apiKeyInput");
+    const saveKeyBtn = document.getElementById("saveKeyBtn");
+    const clearKeyBtn = document.getElementById("clearKeyBtn");
+    const keyStatus = document.getElementById("keyStatus");
+    const promptInput = document.getElementById("promptInput");
+    const runBtn = document.getElementById("runBtn");
+    const outputBox = document.getElementById("outputBox");
 
-      output.innerHTML = `
-        <div class="report-card">
-          <div class="report-title">تقرير المدير الذكي الموحد</div>
-          <div class="report-text">الأمر المستلم: "${cmd}"
-
-• دراسة السوق: تم فحص فئات عالية الطلب وسريعة الدوران (إكسسوارات الهواتف، مستلزمات تنظيم المنزل، منتجات عناية يومية خفيفة الوزن).
-• العمليات: يُفضّل اختيار منتج صغير الحجم، قليل الأعطال، وله أكثر من مورد لتفادي نفاد المخزون.
-• التسويق والمبيعات: البدء بمحتوى فيديو قصير يوضح حل المشكلة مباشرة مع اختبار عرض سعر واضح.
-• المالية والمحاسبة: تقسيم ميزانية الاختبار بعناية وحجز هامش أمان قبل أي صرف فعلي.
-• التكنولوجيا والأتمتة: تجهيز سجل متابعة موحد يربط بيانات المنتج والطلب والربح.</div>
-
-          <div class="approval-box">
-            <div class="approval-title">طلب موافقة قبل التنفيذ (مصاريف / مخاطر)</div>
-            <div class="report-text">يقترح المدير الذكي بدء مرحلة اختبار أولية وتخصيص ميزانية تجريبية للإعلان والعينة. هل توافق على اعتماد الخطة؟</div>
-            <div class="approval-actions">
-              <button class="btn-approve" onclick="decidePlan('تمت الموافقة على الخطة المقترحة من طرف المدير العام.')">موافقة</button>
-              <button class="btn-reject" onclick="decidePlan('تم رفض التنفيذ الحالي — بانتظار تعديل أو أمر جديد من المدير العام.')">رفض / تعديل</button>
-            </div>
-            <div id="decisionStatus" class="status-note"></div>
-          </div>
-        </div>
-      `;
+    function refreshKeyStatus() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        apiKeyInput.value = saved;
+        keyStatus.textContent = "المفتاح محفوظ محلياً على هذا المتصفح فقط.";
+      } else {
+        keyStatus.textContent = "لا يوجد مفتاح محفوظ حالياً على هذا المتصفح.";
+      }
     }
 
-    function decidePlan(msg) {
-      document.getElementById("decisionStatus").textContent = msg;
-    }
+    saveKeyBtn.addEventListener("click", () => {
+      const val = apiKeyInput.value.trim();
+      if (!val) {
+        keyStatus.textContent = "يرجى لصق مفتاح صالح أولاً.";
+        return;
+      }
+      localStorage.setItem(STORAGE_KEY, val);
+      refreshKeyStatus();
+    });
+
+    clearKeyBtn.addEventListener("click", () => {
+      localStorage.removeItem(STORAGE_KEY);
+      apiKeyInput.value = "";
+      refreshKeyStatus();
+    });
+
+    runBtn.addEventListener("click", async () => {
+      const apiKey = (localStorage.getItem(STORAGE_KEY) || apiKeyInput.value).trim();
+      const prompt = promptInput.value.trim();
+
+      if (!apiKey) {
+        outputBox.textContent = "احفظ مفتاح Gemini API أولاً.";
+        return;
+      }
+      if (!prompt) {
+        outputBox.textContent = "اكتب سؤالك أو المهمة المطلوبة أولاً.";
+        return;
+      }
+
+      runBtn.disabled = true;
+      outputBox.textContent = "جاري التحليل...";
+
+      try {
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }]
+            })
+          }
+        );
+
+        const data = await res.json();
+        if (!res.ok) {
+          outputBox.textContent = "خطأ من الخدمة: " + (data?.error?.message || res.status);
+        } else {
+          const text =
+            data?.candidates?.[0]?.content?.parts?.map(p => p.text).filter(Boolean).join("\n") ||
+            "لم يرد نموذج الذكاء الاصطناعي بنص.";
+          outputBox.textContent = text;
+        }
+      } catch (err) {
+        outputBox.textContent = "تعذر الاتصال: " + err.message;
+      } finally {
+        runBtn.disabled = false;
+      }
+    });
+
+    refreshKeyStatus();
   </script>
 </body>
 </html>
