@@ -5,197 +5,267 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SMART COMPANY AI</title>
   <style>
-    :root {
-      --bg-main: #090a0d;
-      --bg-card: #12141a;
-      --bg-elevated: #191c24;
-      --silver: #d8dde6;
-      --silver-muted: #9aa3b2;
-      --border: rgba(216, 221, 230, 0.18);
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+
     body {
-      background: linear-gradient(180deg, #07080a 0%, #11141c 100%);
-      color: var(--silver);
+      margin: 0;
       min-height: 100vh;
+      background: #0d0f12;
+      color: #f3f4f6;
+      display: flex;
+      justify-content: center;
       padding: 20px;
     }
+
     .container {
+      width: 100%;
       max-width: 720px;
-      margin: 0 auto;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
+      background: #15181e;
+      border: 1px solid #262b34;
       border-radius: 16px;
-      padding: 20px;
+      padding: 24px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
     }
+
     h1 {
-      font-size: 1.4rem;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
+      margin: 0 0 6px;
+      font-size: 24px;
+      letter-spacing: 0.4px;
       color: #ffffff;
     }
-    .sub {
-      color: var(--silver-muted);
-      font-size: 0.9rem;
+
+    .subtitle {
+      margin: 0 0 22px;
+      color: #9ca3af;
+      font-size: 14px;
+    }
+
+    .card {
+      background: #1c2028;
+      border: 1px solid #2b313c;
+      border-radius: 12px;
+      padding: 16px;
       margin-bottom: 18px;
     }
-    .box {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 16px;
-    }
+
     label {
       display: block;
-      font-size: 0.85rem;
-      color: var(--silver-muted);
       margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #e5e7eb;
     }
-    input, textarea {
+
+    input[type="password"],
+    textarea {
       width: 100%;
-      background: var(--bg-main);
-      color: #ffffff;
-      border: 1px solid var(--border);
+      background: #101318;
+      color: #f9fafb;
+      border: 1px solid #323946;
       border-radius: 10px;
-      padding: 11px;
-      font-size: 0.95rem;
+      padding: 12px;
+      font-size: 14px;
+      outline: none;
     }
-    textarea { min-height: 110px; resize: vertical; }
-    .row { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+
+    input[type="password"]:focus,
+    textarea:focus {
+      border-color: #9ca3af;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
     button {
-      background: linear-gradient(135deg, #e5e9f0, #9aa3b2);
-      color: #090a0d;
       border: none;
       border-radius: 10px;
-      padding: 10px 16px;
-      font-weight: 700;
+      padding: 11px 18px;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.1s ease;
     }
-    button.secondary {
-      background: transparent;
-      color: var(--silver);
-      border: 1px solid var(--border);
+
+    button:active {
+      transform: scale(0.99);
     }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .btn-secondary {
+      background: #262b35;
+      color: #e5e7eb;
+      border: 1px solid #38404f;
+    }
+
     .status {
-      font-size: 0.82rem;
-      color: var(--silver-muted);
-      margin-top: 8px;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #9ca3af;
     }
-    .output {
+
+    .result-box {
+      background: #101318;
+      border: 1px solid #2b313c;
+      border-radius: 10px;
+      padding: 14px;
+      min-height: 110px;
       white-space: pre-wrap;
-      line-height: 1.65;
-      color: #f0f3f8;
-      min-height: 90px;
+      line-height: 1.7;
+      font-size: 14px;
+      color: #f3f4f6;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>SMART COMPANY AI</h1>
-    <p class="sub">منصة إدارة وتحليل ذكية — المفتاح محفوظ محلياً على جهازك فقط</p>
+    <p class="subtitle">منصة إدارة وتحليل ذكية — المفتاح محفوظ محلياً على جهازك فقط</p>
 
-    <div class="box">
+    <div class="card">
       <label for="apiKeyInput">مفتاح Gemini API (يُحفظ في localStorage فقط)</label>
-      <input id="apiKeyInput" type="password" placeholder="الصق مفتاح Gemini هنا..." autocomplete="off" />
-      <div class="row">
-        <button id="saveKeyBtn" type="button">حفظ المفتاح على الجهاز</button>
-        <button id="clearKeyBtn" class="secondary" type="button">مسح المفتاح</button>
+      <input
+        type="password"
+        id="apiKeyInput"
+        placeholder="الصق مفتاح Gemini هنا..."
+        autocomplete="off"
+      />
+      <div class="btn-row">
+        <button type="button" class="btn-primary" id="saveKeyBtn">حفظ المفتاح على الجهاز</button>
+        <button type="button" class="btn-secondary" id="clearKeyBtn">مسح المفتاح</button>
       </div>
-      <div id="keyStatus" class="status"></div>
+      <div class="status" id="keyStatus">جاري التحقق من حالة المفتاح...</div>
     </div>
 
-    <div class="box">
+    <div class="card">
       <label for="promptInput">اطلب تحليلاً أو مهمة أعمال</label>
-      <textarea id="promptInput" placeholder="مثال: اقترح خطة عمل سريعة لزيادة المبيعات هذا الشهر..."></textarea>
-      <div class="row">
-        <button id="runBtn" type="button">تحليل فوري</button>
+      <textarea
+        id="promptInput"
+        placeholder="مثال: اقترح خطة عمل سريعة لزيادة المبيعات هذا الشهر..."
+      ></textarea>
+      <div class="btn-row">
+        <button type="button" class="btn-primary" id="analyzeBtn">تحليل فوري</button>
       </div>
     </div>
 
-    <div class="box">
+    <div class="card">
       <label>النتيجة</label>
-      <div id="outputBox" class="output">بانتظار إدخال المفتاح وطرح سؤالك...</div>
+      <div class="result-box" id="resultBox">ستظهر نتيجة التحليل هنا...</div>
     </div>
   </div>
 
   <script>
-    const STORAGE_KEY = "smart_company_gemini_api_key";
+    const STORAGE_KEY = "SMART_COMPANY_GEMINI_API_KEY";
+    const MODEL_NAME = "gemini-3.8-flash";
+
     const apiKeyInput = document.getElementById("apiKeyInput");
     const saveKeyBtn = document.getElementById("saveKeyBtn");
     const clearKeyBtn = document.getElementById("clearKeyBtn");
     const keyStatus = document.getElementById("keyStatus");
     const promptInput = document.getElementById("promptInput");
-    const runBtn = document.getElementById("runBtn");
-    const outputBox = document.getElementById("outputBox");
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    const resultBox = document.getElementById("resultBox");
 
     function refreshKeyStatus() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        apiKeyInput.value = saved;
+      const savedKey = localStorage.getItem(STORAGE_KEY);
+      if (savedKey && savedKey.trim()) {
+        apiKeyInput.value = savedKey;
         keyStatus.textContent = "المفتاح محفوظ محلياً على هذا المتصفح فقط.";
       } else {
+        apiKeyInput.value = "";
         keyStatus.textContent = "لا يوجد مفتاح محفوظ حالياً على هذا المتصفح.";
       }
     }
 
     saveKeyBtn.addEventListener("click", () => {
-      const val = apiKeyInput.value.trim();
-      if (!val) {
-        keyStatus.textContent = "يرجى لصق مفتاح صالح أولاً.";
+      const key = apiKeyInput.value.trim();
+      if (!key) {
+        keyStatus.textContent = "يرجى لصق مفتاح Gemini API أولاً.";
         return;
       }
-      localStorage.setItem(STORAGE_KEY, val);
+      localStorage.setItem(STORAGE_KEY, key);
       refreshKeyStatus();
     });
 
     clearKeyBtn.addEventListener("click", () => {
       localStorage.removeItem(STORAGE_KEY);
-      apiKeyInput.value = "";
       refreshKeyStatus();
+      resultBox.textContent = "تم مسح المفتاح من هذا المتصفح.";
     });
 
-    runBtn.addEventListener("click", async () => {
+    analyzeBtn.addEventListener("click", async () => {
       const apiKey = (localStorage.getItem(STORAGE_KEY) || apiKeyInput.value).trim();
       const prompt = promptInput.value.trim();
 
       if (!apiKey) {
-        outputBox.textContent = "احفظ مفتاح Gemini API أولاً.";
-        return;
-      }
-      if (!prompt) {
-        outputBox.textContent = "اكتب سؤالك أو المهمة المطلوبة أولاً.";
+        resultBox.textContent = "يرجى إدخال وحفظ مفتاح Gemini API أولاً.";
         return;
       }
 
-      runBtn.disabled = true;
-      outputBox.textContent = "جاري التحليل...";
+      if (!prompt) {
+        resultBox.textContent = "يرجى كتابة طلب أو مهمة أعمال قبل الضغط على تحليل فوري.";
+        return;
+      }
+
+      analyzeBtn.disabled = true;
+      resultBox.textContent = "جاري التحليل...";
 
       try {
-        const res = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }] }]
-            })
-          }
-        );
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
-        const data = await res.json();
-        if (!res.ok) {
-          outputBox.textContent = "خطأ من الخدمة: " + (data?.error?.message || res.status);
-        } else {
-          const text =
-            data?.candidates?.[0]?.content?.parts?.map(p => p.text).filter(Boolean).join("\n") ||
-            "لم يرد نموذج الذكاء الاصطناعي بنص.";
-          outputBox.textContent = text;
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [{ text: prompt }]
+              }
+            ]
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          const apiMessage = data?.error?.message || `HTTP ${response.status}`;
+          throw new Error(apiMessage);
         }
-      } catch (err) {
-        outputBox.textContent = "تعذر الاتصال: " + err.message;
+
+        const parts = data?.candidates?.[0]?.content?.parts || [];
+        const replyText = parts
+          .map((part) => part.text || "")
+          .join("")
+          .trim();
+
+        resultBox.textContent = replyText || "تم استلام الاستجابة ولكن لم يظهر نص.";
+      } catch (error) {
+        resultBox.textContent = `خطأ من الخدمة: ${error.message}`;
       } finally {
-        runBtn.disabled = false;
+        analyzeBtn.disabled = false;
       }
     });
 
