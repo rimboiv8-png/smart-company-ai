@@ -178,6 +178,7 @@
   <script>
     const STORAGE_KEY = "SMART_COMPANY_GEMINI_API_KEY";
     const MODEL_NAME = "gemini-3.8-flash";
+    const MAX_RETRIES = 3;
 
     const apiKeyInput = document.getElementById("apiKeyInput");
     const saveKeyBtn = document.getElementById("saveKeyBtn");
@@ -186,6 +187,10 @@
     const promptInput = document.getElementById("promptInput");
     const analyzeBtn = document.getElementById("analyzeBtn");
     const resultBox = document.getElementById("resultBox");
+
+    function sleep(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
 
     function refreshKeyStatus() {
       const savedKey = localStorage.getItem(STORAGE_KEY);
@@ -214,6 +219,39 @@
       resultBox.textContent = "تم مسح المفتاح من هذا المتصفح.";
     });
 
+    async function requestGemini(apiKey, prompt) {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${encodeURIComponent(apiKey)}`;
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [{ text: prompt }]
+            }
+          ]
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const apiMessage = data?.error?.message || `HTTP ${response.status}`;
+        const error = new Error(apiMessage);
+        error.status = response.status;
+        throw error;
+      }
+
+      const parts = data?.candidates?.[0]?.content?.parts || [];
+      return parts
+        .map((part) => part.text || "")
+        .join("")
+        .trim();
+    }
+
     analyzeBtn.addEventListener("click", async () => {
       const apiKey = (localStorage.getItem(STORAGE_KEY) || apiKeyInput.value).trim();
       const prompt = promptInput.value.trim();
@@ -229,37 +267,32 @@
       }
 
       analyzeBtn.disabled = true;
-      resultBox.textContent = "جاري التحليل...";
 
       try {
-        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${encodeURIComponent(apiKey)}`;
+        let replyText = "";
 
-        const response = await fetch(endpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [{ text: prompt }]
-              }
-            ]
-          })
-        });
+        for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+          resultBox.textContent =
+            attempt === 1
+              ? "جاري التحليل..."
+              : `الخادم مضغوط مؤقتاً، جاري إعادة المحاولة (${attempt}/${MAX_RETRIES})...`;
 
-        const data = await response.json();
+          try {
+            replyText = await requestGemini(apiKey, prompt);
+            break;
+          } catch (err) {
+            const isHighDemand =
+              err.status === 503 ||
+              err.status === 429 ||
+              /high demand|overloaded|unavailable|try again/i.test(err.message);
 
-        if (!response.ok) {
-          const apiMessage = data?.error?.message || `HTTP ${response.status}`;
-          throw new Error(apiMessage);
+            if (isHighDemand && attempt < MAX_RETRIES) {
+              await sleep(attempt * 2000);
+              continue;
+            }
+            throw err;
+          }
         }
-
-        const parts = data?.candidates?.[0]?.content?.parts || [];
-        const replyText = parts
-          .map((part) => part.text || "")
-          .join("")
-          .trim();
 
         resultBox.textContent = replyText || "تم استلام الاستجابة ولكن لم يظهر نص.";
       } catch (error) {
