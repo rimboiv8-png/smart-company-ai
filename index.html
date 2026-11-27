@@ -60,6 +60,7 @@
     }
 
     input[type="password"],
+    select,
     textarea {
       width: 100%;
       background: #101318;
@@ -72,6 +73,7 @@
     }
 
     input[type="password"]:focus,
+    select:focus,
     textarea:focus {
       border-color: #9ca3af;
     }
@@ -159,7 +161,14 @@
     </div>
 
     <div class="card">
-      <label for="promptInput">اطلب تحليلاً أو مهمة أعمال</label>
+      <label for="modelSelect">النموذج</label>
+      <select id="modelSelect">
+        <option value="gemini-3.8-flash">gemini-3.8-flash (الافتراضي)</option>
+        <option value="gemini-3.8-flash-lite">gemini-3.8-flash-lite</option>
+        <option value="gemini-3.8-pro">gemini-3.8-pro</option>
+      </select>
+
+      <label for="promptInput" style="margin-top: 14px;">اطلب تحليلاً أو مهمة أعمال</label>
       <textarea
         id="promptInput"
         placeholder="مثال: اقترح خطة عمل سريعة لزيادة المبيعات هذا الشهر..."
@@ -177,13 +186,14 @@
 
   <script>
     const STORAGE_KEY = "SMART_COMPANY_GEMINI_API_KEY";
-    const MODEL_NAME = "gemini-3.8-flash";
-    const MAX_RETRIES = 3;
+    const MODEL_STORAGE_KEY = "SMART_COMPANY_GEMINI_MODEL";
+    const MAX_RETRIES = 2;
 
     const apiKeyInput = document.getElementById("apiKeyInput");
     const saveKeyBtn = document.getElementById("saveKeyBtn");
     const clearKeyBtn = document.getElementById("clearKeyBtn");
     const keyStatus = document.getElementById("keyStatus");
+    const modelSelect = document.getElementById("modelSelect");
     const promptInput = document.getElementById("promptInput");
     const analyzeBtn = document.getElementById("analyzeBtn");
     const resultBox = document.getElementById("resultBox");
@@ -201,7 +211,16 @@
         apiKeyInput.value = "";
         keyStatus.textContent = "لا يوجد مفتاح محفوظ حالياً على هذا المتصفح.";
       }
+
+      const savedModel = localStorage.getItem(MODEL_STORAGE_KEY);
+      if (savedModel && [...modelSelect.options].some((o) => o.value === savedModel)) {
+        modelSelect.value = savedModel;
+      }
     }
+
+    modelSelect.addEventListener("change", () => {
+      localStorage.setItem(MODEL_STORAGE_KEY, modelSelect.value);
+    });
 
     saveKeyBtn.addEventListener("click", () => {
       const key = apiKeyInput.value.trim();
@@ -219,8 +238,8 @@
       resultBox.textContent = "تم مسح المفتاح من هذا المتصفح.";
     });
 
-    async function requestGemini(apiKey, prompt) {
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${encodeURIComponent(apiKey)}`;
+    async function requestGemini(apiKey, modelName, prompt) {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
       const response = await fetch(endpoint, {
         method: "POST",
@@ -252,9 +271,18 @@
         .trim();
     }
 
+    function isHighDemandError(err) {
+      return (
+        err.status === 503 ||
+        err.status === 429 ||
+        /high demand|overloaded|unavailable|try again/i.test(err.message)
+      );
+    }
+
     analyzeBtn.addEventListener("click", async () => {
       const apiKey = (localStorage.getItem(STORAGE_KEY) || apiKeyInput.value).trim();
       const prompt = promptInput.value.trim();
+      const selectedModel = modelSelect.value;
 
       if (!apiKey) {
         resultBox.textContent = "يرجى إدخال وحفظ مفتاح Gemini API أولاً.";
@@ -270,28 +298,33 @@
 
       try {
         let replyText = "";
+        let lastError = null;
 
         for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
           resultBox.textContent =
             attempt === 1
-              ? "جاري التحليل..."
-              : `الخادم مضغوط مؤقتاً، جاري إعادة المحاولة (${attempt}/${MAX_RETRIES})...`;
+              ? `جاري التحليل (${selectedModel})...`
+              : `النموذج مضغوط، إعادة المحاولة (${attempt}/${MAX_RETRIES})...`;
 
           try {
-            replyText = await requestGemini(apiKey, prompt);
+            replyText = await requestGemini(apiKey, selectedModel, prompt);
+            lastError = null;
             break;
           } catch (err) {
-            const isHighDemand =
-              err.status === 503 ||
-              err.status === 429 ||
-              /high demand|overloaded|unavailable|try again/i.test(err.message);
-
-            if (isHighDemand && attempt < MAX_RETRIES) {
-              await sleep(attempt * 2000);
+            lastError = err;
+            if (isHighDemandError(err) && attempt < MAX_RETRIES) {
+              await sleep(1500);
               continue;
             }
-            throw err;
+            break;
           }
+        }
+
+        if (lastError && isHighDemandError(lastError) && selectedModel !== "gemini-3.8-flash-lite") {
+          resultBox.textContent = "الضغط مستمر، جاري تجربة نموذج أخف (gemini-3.8-flash-lite)...";
+          replyText = await requestGemini(apiKey, "gemini-3.8-flash-lite", prompt);
+        } else if (lastError) {
+          throw lastError;
         }
 
         resultBox.textContent = replyText || "تم استلام الاستجابة ولكن لم يظهر نص.";
